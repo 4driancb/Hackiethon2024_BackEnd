@@ -65,6 +65,8 @@ class Script:
         if get_last_move(enemy) is not None :
             if get_last_move(enemy)[0] == "dash_attack" and distance < 5:
                 return BLOCK
+            if get_last_move(enemy)[0] == "onepunch" and distance < 2:
+                return JUMP_BACKWARD
 
         if distance < 7:
             if not secondary_on_cooldown(player):
