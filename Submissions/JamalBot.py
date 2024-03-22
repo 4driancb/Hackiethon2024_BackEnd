@@ -10,7 +10,7 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
 PRIMARY_SKILL = OnePunchSkill
-SECONDARY_SKILL = Grenade
+SECONDARY_SKILL = Hadoken
 
 # constants, for easier move return
 # movements
@@ -47,81 +47,34 @@ class Script:
 
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
-        distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
-        
-        if not primary_on_cooldown(player) and distance == 1:
-            return PRIMARY
-        elif not secondary_on_cooldown(player) and distance < 6:
+        player_pos = get_pos(player)
+        enemy_pos = get_pos(enemy)
+
+        distance = abs(player_pos[0] - enemy_pos[0])
+    
+        if not secondary_on_cooldown(player):
             return SECONDARY
-        elif distance > 3:
-            return FORWARD
+        
+        if get_block_status(player) > 0:
+            return BLOCK
 
-        if distance < 3:
-            return LIGHT
-
-        return FORWARD
-    
-    def block_heavy_combo(self, player, enemy):
-        player_x, player_y = get_pos(player)
-        enemy_x, enemy_y = get_pos(enemy)
-
-        if player_y == enemy_y and abs(player_x - enemy_x) == 1:
-            if get_past_move(enemy, 1) == LIGHT:
-                if get_past_move(enemy, 2) == LIGHT:
-                    return BLOCK
-                else:
-                    return NOMOVE
-            else:
-                return NOMOVE
-        return NOMOVE
-    
-    def heavy_combo(self, player, enemy):
-        player_x, player_y = get_pos(player)
-        enemy_x, enemy_y = get_pos(enemy)
-        if get_stun_duration(player):
+        if get_stun_duration(player) > 0:
             return NOMOVE
-        if player_y == enemy_y and abs(player_x - enemy_x) == 1:
-            if get_past_move(player, 1) == LIGHT:
-                if get_past_move(player, 2) == LIGHT:
-                    return HEAVY
-                else:
-                    return LIGHT
-            else:
-                return LIGHT
-        return FORWARD
+        
+        if get_stun_duration(enemy) > 0 and distance <= 1:
+            return BLOCK
+        
+        if distance <= 1 and not primary_on_cooldown(player):
+            return PRIMARY
 
-    def winning_strategy(self, player, enemy, primary, secondary):
-        # Check if any skill is available and use it wisely
-        if not primary_on_cooldown(player) and abs(get_pos(player)[0] - get_pos(enemy)[0]) <= prim_range(player):
-            return primary
-        elif not secondary_on_cooldown(player) and abs(get_pos(player)[0] - get_pos(enemy)[0]) <= seco_range(player):
-            return secondary
-        elif not heavy_on_cooldown(player) and abs(get_pos(player)[0] - get_pos(enemy)[0]) <= 1:
-            return HEAVY
-
-        # Defensive strategy if low on health or enemy is too close
-        if get_hp(player) < 20 or abs(get_pos(player)[0] - get_pos(enemy)[0]) < 2:
-            # Block if enemy is close and likely to attack
-            if abs(get_pos(player)[0] - get_pos(enemy)[0]) == 1:
-                return BLOCK
-            # Move away from the enemy if possible
-            elif get_pos(player)[0] < get_pos(enemy)[0]:
-                return BACK
-            else:
-                return FORWARD
-
-        # Offensive strategy if player has more health
-        if get_hp(player) > get_hp(enemy):
-            # Close in on the enemy if not in attack range
-            if abs(get_pos(player)[0] - get_pos(enemy)[0]) > 1:
-                if get_pos(player)[0] < get_pos(enemy)[0]:
-                    return FORWARD
-                else:
-                    return BACK
-            # Use light attack if close and other attacks are on cooldown
-            else:
-                return LIGHT
-
-        # Default to light attack if nothing else is applicable
-        return LIGHT
-
+        if distance <= 1:
+            if not heavy_on_cooldown(player):
+                return HEAVY
+            return LIGHT
+        
+        if player_pos[0] < enemy_pos[0]:
+            return FORWARD
+        elif player_pos[0] > enemy_pos[0]:
+            return BACK
+        
+        return NOMOVE
