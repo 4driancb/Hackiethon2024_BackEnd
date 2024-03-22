@@ -10,7 +10,7 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
 PRIMARY_SKILL = DashAttackSkill
-SECONDARY_SKILL = Hadoken
+SECONDARY_SKILL = Grenade
 
 # constants, for easier move return
 # movements
