@@ -63,8 +63,9 @@ class Script:
 
         if not primary_on_cooldown(player):
             return PRIMARY
-        if not secondary_on_cooldown(player) and get_last_move(player)[1][1] != 1:
-            return SECONDARY
+        if get_last_move(player) is not None:
+            if not secondary_on_cooldown(player) and get_last_move(player)[1][1] != 1:
+                return SECONDARY
 
         if distance <= 1:
             if not heavy_on_cooldown(player):
