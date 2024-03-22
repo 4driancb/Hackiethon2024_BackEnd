@@ -70,5 +70,5 @@ class Script:
             else:
                 return LIGHT
 
-        return BACK
+        return FORWARD
 
