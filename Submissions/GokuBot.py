@@ -10,7 +10,7 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
 PRIMARY_SKILL = DashAttackSkill
-SECONDARY_SKILL = BearTrap
+SECONDARY_SKILL = Hadoken
 
 # constants, for easier move return
 # movements
@@ -49,8 +49,8 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
-        if not primary_on_cooldown(player) and get_hp(player) <= 80:
-            return PRIMARY
+        # if not primary_on_cooldown(player) and get_hp(player) <= 80:
+        #     return PRIMARY
 
         # for i in enemy_projectiles:
         #     if get_projectile_type(i) == Hadoken and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
@@ -76,8 +76,9 @@ class Script:
 
         if not primary_on_cooldown(player):
             return PRIMARY
-        if get_last_move(player) == PRIMARY:
+        if not secondary_on_cooldown(player):
             return SECONDARY
+
         if distance <= 1:
             if not heavy_on_cooldown(player):
                 return HEAVY
