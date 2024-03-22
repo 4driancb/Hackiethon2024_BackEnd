@@ -48,6 +48,9 @@ class Script:
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
+        if get_primary_skill(enemy) == "onepunch":
+            if distance <= 2:
+                return JUMP_BACKWARD
         for i in enemy_projectiles:
             if get_projectile_type(i) == "hadoken":
                 return JUMP_FORWARD
