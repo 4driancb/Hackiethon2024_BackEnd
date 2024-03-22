@@ -49,24 +49,27 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         player_pos = get_pos(player)
         enemy_pos = get_pos(enemy)
-
         distance = abs(player_pos[0] - enemy_pos[0])
-    
+        
         if not secondary_on_cooldown(player):
             return SECONDARY
         
         if get_block_status(player) > 0:
             return BLOCK
-
+        
         if get_stun_duration(player) > 0:
             return NOMOVE
         
         if get_stun_duration(enemy) > 0 and distance <= 1:
-            return BLOCK
+            return LIGHT
         
-        if distance <= 1 and not primary_on_cooldown(player):
+        if get_hp(player) < 30 and distance > 2:
+            if not primary_on_cooldown(player):
+                return PRIMARY
+        
+        if not primary_on_cooldown(player) and distance == 1:
             return PRIMARY
-
+        
         if distance <= 1:
             if not heavy_on_cooldown(player):
                 return HEAVY
