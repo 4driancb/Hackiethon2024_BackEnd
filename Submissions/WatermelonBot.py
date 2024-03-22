@@ -10,8 +10,8 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 # SECONDARY CAN BE : Hadoken, Grenade, Boomerang, Bear Trap
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
-PRIMARY_SKILL = DashAttackSkill
-SECONDARY_SKILL = Grenade
+PRIMARY_SKILL = OnePunchSkill
+SECONDARY_SKILL = Boomerang
 
 # constants, for easier move return
 # movements
@@ -50,33 +50,32 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
-        # projectile blok
+        # projectile
         for i in enemy_projectiles:
-            proj_dist = abs(get_pos(player)[0] - get_proj_pos(i)[0])
-            if get_projectile_type(i) != "grenade":
-                if proj_dist <= 1:
-                    return BLOCK
+            if get_projectile_type(i) == "hadoken":
+                return JUMP_FORWARD
+            elif get_projectile_type(i) == "grenade" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) < 3:
+                return FORWARD
+            elif get_projectile_type(i) == "boomerang" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+                return BLOCK
+            elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+                return JUMP_BACKWARD
 
-        # anti dash
-        if get_last_move(enemy) is not None:
-            if get_last_move(enemy)[0] == "dash_attack":
-                if distance <= 3:
-                    if not heavy_on_cooldown(player):
-                        return HEAVY
-                    else:
-                        LIGHT
 
-        # cum nd go
-        if (distance <= 4) and (not get_secondary_cooldown(player)):
-            return SECONDARY
-        if (distance <= 2) and (not get_primary_cooldown(player)):
+        if get_last_move(enemy) is not None :
+            if get_last_move(enemy)[0] == "dash_attack" and distance < 5:
+                return BLOCK
+
+        if distance < 7:
+            if not secondary_on_cooldown(player):
+                return SECONDARY
+        if (not primary_on_cooldown(player)) and (distance <= 2):
             return PRIMARY
 
-        if distance == 1:
-            if not heavy_on_cooldown(player):
-                return HEAVY
-            else:
-                LIGHT
+        if distance <= 1:
+            return LIGHT
 
-        if distance > 3:
+        if distance > 5:
             return FORWARD
+
+        return BACK
