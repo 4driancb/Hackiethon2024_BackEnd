@@ -53,4 +53,18 @@ class Script:
             return LIGHT
 
         return FORWARD
+    
+    def block_heavy_combo(player, enemy)
+        player_x, player_y = get_pos(player)
+        enemy_x, enemy_y = get_pos(enemy)
+
+        if player_y == enemy_y and abs(player_x - enemy_x) == 1:
+            if get_past_move(enemy, 1) == LIGHT:
+                if get_past_move(enemy, 2) == LIGHT:
+                    return BLOCK
+                else:
+                    return NOMOVE
+            else:
+                return NOMOVE
+        return NOMOVE
 
