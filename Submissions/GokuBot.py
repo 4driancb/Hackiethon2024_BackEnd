@@ -9,7 +9,7 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 # SECONDARY CAN BE : Hadoken, Grenade, Boomerang, Bear Trap
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
-PRIMARY_SKILL = Meditate
+PRIMARY_SKILL = DashAttackSkill
 SECONDARY_SKILL = Hadoken
 
 # constants, for easier move return
@@ -49,28 +49,35 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
-        if not primary_on_cooldown(player) and get_hp(player) <= 80:
+        # if not primary_on_cooldown(player) and get_hp(player) <= 80:
+        #     return PRIMARY
+
+        # for i in enemy_projectiles:
+        #     if get_projectile_type(i) == Hadoken and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+        #         return JUMP_FORWARD
+        #     elif get_projectile_type(i) == Grenade and abs(get_pos(player)[0] - get_proj_pos(i)[0]) < 3:
+        #         return BACK
+        #     elif get_projectile_type(i) == Boomerang and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+        #         return BLOCK
+        #     elif get_projectile_type(i) == BearTrap and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+        #         return BACK
+
+        # if get_last_move(player) == PRIMARY:
+        #     return SECONDARY
+        if distance >= 2:
             return PRIMARY
-
-        for i in enemy_projectiles:
-            if abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
-                return BLOCK
-
-        if secondary_on_cooldown(enemy):
+        elif not secondary_on_cooldown(player):
             return SECONDARY
+        elif distance <= 1:
+            return BACK
 
-        if distance < 2:
-            return LIGHT
-        # player_x, player_y = get_pos(player)
-        # enemy_x, enemy_y = get_pos(enemy)
-        # if player_y == enemy_y and abs(player_x - enemy_x) == 1:
-        #     if get_past_move(player, 1) == LIGHT:
-        #         if get_past_move(player, 2) == LIGHT:
-        #             return HEAVY
-        #         else:
-        #             return LIGHT
-        #     else:
-        #         return LIGHT
+        # if secondary_on_cooldown(enemy):
+        #     return SECONDARY
+
+        # if distance <= 1:
+        #     if not heavy_on_cooldown(player):
+        #         return HEAVY
+        #     return LIGHT
 
         return BACK
 
