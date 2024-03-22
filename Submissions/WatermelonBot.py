@@ -66,9 +66,12 @@ class Script:
         #cum nd go
         if (distance <= 2) and (not get_primary_cooldown(player)):
             return PRIMARY
-        if (distance < 5) and (not get_secondary_cooldown(player)):
+        if (distance < 6) and (not get_secondary_cooldown(player)):
             if get_last_move(enemy) == FORWARD:
                 return SECONDARY
 
-        return BACK
+        while distance < 6:
+            return BACK
+
+        return FORWARD
 
