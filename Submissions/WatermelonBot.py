@@ -50,6 +50,7 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
+        # projectile blok
         for i in enemy_projectiles:
             proj_dist = abs(get_pos(player)[0] - get_proj_pos(i)[0])
             if proj_dist == 1:
@@ -64,13 +65,15 @@ class Script:
             return LIGHT
 
         #cum nd go
-        if (distance <= 2) and (not get_primary_cooldown(player)):
+        if (distance <= 4) and (not get_primary_cooldown(player)):
             return PRIMARY
-        if (distance < 6) and (not get_secondary_cooldown(player)):
+        if (distance < 5) and (not get_secondary_cooldown(player)):
             if get_last_move(enemy) == FORWARD:
                 return SECONDARY
+        if (distance < 4) and (not get_secondary_cooldown(player)):
+            return SECONDARY
 
-        while distance < 6:
+        if distance < 4:
             return BACK
 
         return FORWARD
