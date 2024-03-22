@@ -10,8 +10,8 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 # SECONDARY CAN BE : Hadoken, Grenade, Boomerang, Bear Trap
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
-PRIMARY_SKILL = TeleportSkill
-SECONDARY_SKILL = Hadoken
+PRIMARY_SKILL = DashAttackSkill
+SECONDARY_SKILL = Grenade
 
 # constants, for easier move return
 # movements
@@ -50,24 +50,23 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
-        if distance == 1:
+        for i in enemy_projectiles:
+            proj_dist = abs(get_pos(player)[0] - get_proj_pos(i)[0])
+            if proj_dist == 1:
+                return BLOCK
+
+        if get_last_move(enemy) == LIGHT or get_last_move(enemy) == HEAVY:
+            if distance == 1:
+                return BLOCK
+        elif get_stun_duration(enemy) and distance == 1:
             return LIGHT
 
-        return FORWARD
+        #cum nd go
+        if (distance <= 1) and (not get_primary_cooldown(player)):
+            return PRIMARY
+        if (distance < 5) and (not get_secondary_cooldown(player)):
+            if get_last_move(enemy) == FORWARD:
+                return SECONDARY
 
-    
-
-    def block_heavy_combo(player, enemy):
-        player_x, player_y = get_pos(player)
-        enemy_x, enemy_y = get_pos(enemy)
-
-        if player_y == enemy_y and abs(player_x - enemy_x) == 1:
-            if get_past_move(enemy, 1) == LIGHT:
-                if get_past_move(enemy, 2) == LIGHT:
-                    return BLOCK
-                else:
-                    return NOMOVE
-            else:
-                return NOMOVE
-        return NOMOVE
+        return BACK
 
