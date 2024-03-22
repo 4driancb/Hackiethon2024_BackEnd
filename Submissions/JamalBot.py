@@ -51,6 +51,9 @@ class Script:
         enemy_pos = get_pos(enemy)
         distance = abs(player_pos[0] - enemy_pos[0])
 
+        if player_pos[0] > enemy_pos[0]:
+            return FORWARD
+
         if distance >= 6:
             return FORWARD
         
