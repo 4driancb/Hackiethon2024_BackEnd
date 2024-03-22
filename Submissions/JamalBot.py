@@ -48,38 +48,18 @@ class Script:
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
-
-        if not secondary_on_cooldown(player) and not primary_on_cooldown(player) and distance < 2:
-            self.skills_combo(player, enemy)
-
-        if distance < 2:
-            self.block_heavy_combo(player, enemy)
-
-        if not secondary_on_cooldown(player) and distance >= 2:
-            return SECONDARY
-        elif not primary_on_cooldown(player) and distance == 1:
-            return PRIMARY
         
-        self.heavy_combo(player, enemy)
+        if not primary_on_cooldown(player) and distance == 1:
+            return PRIMARY
+        elif not secondary_on_cooldown(player) and distance < 6:
+            return SECONDARY
+        elif distance > 3:
+            return FORWARD
 
         if distance < 3:
             return LIGHT
 
         return FORWARD
-    
-    def skills_combo(self, player, enemy):
-        player_x, player_y = get_pos(player)
-        enemy_x, enemy_y = get_pos(enemy)
-        distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
-
-        if player_y == enemy_y:
-            if distance == 1:
-                return PRIMARY
-            elif distance == 3:
-                return SECONDARY 
-            elif distance > 4:
-                return FORWARD
-        return NOMOVE
     
     def block_heavy_combo(self, player, enemy):
         player_x, player_y = get_pos(player)
