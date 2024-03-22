@@ -53,24 +53,38 @@ class Script:
         # projectile blok
         for i in enemy_projectiles:
             proj_dist = abs(get_pos(player)[0] - get_proj_pos(i)[0])
-            if proj_dist == 1:
+            if proj_dist <= 1:
                 if get_projectile_type(i) is not Grenade:
                     return BLOCK
 
         if get_last_move(enemy) == LIGHT or get_last_move(enemy) == HEAVY:
-            if distance == 1:
-                if get_last_move(player) is not BLOCK:
-                    return BLOCK
+            if distance <= 1:
+                return BLOCK
         elif get_stun_duration(enemy) and distance == 1:
-            return LIGHT
+            if not heavy_on_cooldown(player):
+                return HEAVY
+            else:
+                LIGHT
+
+        #cum nd fight nd piss off
+        past_3_me = []
+        past_3_me.append(get_past_move(player, 1))
+        past_3_me.append(get_past_move(player, 2))
+        past_3_me.append(get_past_move(player, 3))
+        if PRIMARY in past_3_me:
+            if distance <= 1:
+                if not heavy_on_cooldown(player):
+                    return HEAVY
+                else:
+                    LIGHT
 
         #cum nd go
-        if (distance <= 4) and (not get_primary_cooldown(player)):
+        if (distance <= 2) and (not get_primary_cooldown(player)):
             return PRIMARY
-        if (distance < 5) and (not get_secondary_cooldown(player)):
-            if get_last_move(enemy) == FORWARD:
+        if (distance <= 4) and (not get_secondary_cooldown(player)):
+            if get_last_move(enemy) == FORWARD :
                 return SECONDARY
-        if (distance < 4) and (not get_secondary_cooldown(player)):
+        if (distance <= 4) and (not get_secondary_cooldown(player)):
             return SECONDARY
 
         if distance < 4:
