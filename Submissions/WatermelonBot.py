@@ -61,7 +61,10 @@ class Script:
             if distance <= 1:
                 return BLOCK
         elif get_stun_duration(enemy) and distance == 1:
-            return LIGHT
+            if not heavy_on_cooldown(player):
+                return HEAVY
+            else:
+                LIGHT
 
         #cum nd fight nd piss off
         past_3_me = []
@@ -69,16 +72,19 @@ class Script:
         past_3_me.append(get_past_move(player, 2))
         past_3_me.append(get_past_move(player, 3))
         if PRIMARY in past_3_me:
-                if distance <= 1:
-                    return LIGHT
+            if distance <= 1:
+                if not heavy_on_cooldown(player):
+                    return HEAVY
+                else:
+                    LIGHT
 
         #cum nd go
         if (distance <= 2) and (not get_primary_cooldown(player)):
             return PRIMARY
-        if (distance < 4) and (not get_secondary_cooldown(player)):
+        if (distance <= 4) and (not get_secondary_cooldown(player)):
             if get_last_move(enemy) == FORWARD:
                 return SECONDARY
-        if (distance < 4) and (not get_secondary_cooldown(player)):
+        if (distance <= 4) and (not get_secondary_cooldown(player)):
             return SECONDARY
 
         if distance < 4:
