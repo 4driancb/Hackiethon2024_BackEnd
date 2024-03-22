@@ -51,6 +51,10 @@ class Script:
         enemy_pos = get_pos(enemy)
         distance = abs(player_pos[0] - enemy_pos[0])
 
+        if get_primary_skill(enemy) == "onepunch":
+            if distance == 1:
+                return JUMP_BACKWARD
+
         for i in enemy_projectiles:
             if get_projectile_type(i) == "hadoken":
                 return JUMP_FORWARD
