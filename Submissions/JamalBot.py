@@ -50,6 +50,9 @@ class Script:
         player_pos = get_pos(player)
         enemy_pos = get_pos(enemy)
         distance = abs(player_pos[0] - enemy_pos[0])
+
+        if distance >= 6:
+            return FORWARD
         
         if not secondary_on_cooldown(player):
             return SECONDARY
