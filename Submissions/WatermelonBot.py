@@ -53,16 +53,18 @@ class Script:
         for i in enemy_projectiles:
             proj_dist = abs(get_pos(player)[0] - get_proj_pos(i)[0])
             if proj_dist == 1:
-                return BLOCK
+                if get_projectile_type(i) is not Grenade:
+                    return BLOCK
 
         if get_last_move(enemy) == LIGHT or get_last_move(enemy) == HEAVY:
             if distance == 1:
-                return BLOCK
+                if get_last_move(player) is not BLOCK:
+                    return BLOCK
         elif get_stun_duration(enemy) and distance == 1:
             return LIGHT
 
         #cum nd go
-        if (distance <= 1) and (not get_primary_cooldown(player)):
+        if (distance <= 2) and (not get_primary_cooldown(player)):
             return PRIMARY
         if (distance < 5) and (not get_secondary_cooldown(player)):
             if get_last_move(enemy) == FORWARD:
