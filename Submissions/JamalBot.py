@@ -1,4 +1,3 @@
-# Testing PR request#3
 # bot code goes here
 from Game.Skills import *
 from Game.projectiles import *
@@ -10,7 +9,7 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 # SECONDARY CAN BE : Hadoken, Grenade, Boomerang, Bear Trap
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
-PRIMARY_SKILL = TeleportSkill
+PRIMARY_SKILL = OnePunchSkill
 SECONDARY_SKILL = Grenade
 
 # constants, for easier move return
@@ -50,17 +49,37 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
-        if not secondary_on_cooldown(player) and distance > 1:
+        if not secondary_on_cooldown(player) and not primary_on_cooldown(player) and distance < 2:
+            self.skills_combo(player, enemy)
+
+        if distance < 2:
+            self.block_heavy_combo(player, enemy)
+
+        if not secondary_on_cooldown(player) and distance >= 2:
             return SECONDARY
-        elif not primary_on_cooldown(player) and distance < 3:
+        elif not primary_on_cooldown(player) and distance == 1:
             return PRIMARY
+        
+        self.heavy_combo(player, enemy)
 
-        self.block_heavy_combo(player, enemy)
-
-        if distance == 1:
+        if distance < 3:
             return LIGHT
 
         return FORWARD
+    
+    def skills_combo(self, player, enemy):
+        player_x, player_y = get_pos(player)
+        enemy_x, enemy_y = get_pos(enemy)
+        distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
+
+        if player_y == enemy_y:
+            if distance == 1:
+                return PRIMARY
+            elif distance == 3:
+                return SECONDARY 
+            elif distance > 4:
+                return FORWARD
+        return NOMOVE
     
     def block_heavy_combo(self, player, enemy):
         player_x, player_y = get_pos(player)
@@ -75,6 +94,21 @@ class Script:
             else:
                 return NOMOVE
         return NOMOVE
+    
+    def heavy_combo(self, player, enemy):
+        player_x, player_y = get_pos(player)
+        enemy_x, enemy_y = get_pos(enemy)
+        if get_stun_duration(player):
+            return NOMOVE
+        if player_y == enemy_y and abs(player_x - enemy_x) == 1:
+            if get_past_move(player, 1) == LIGHT:
+                if get_past_move(player, 2) == LIGHT:
+                    return HEAVY
+                else:
+                    return LIGHT
+            else:
+                return LIGHT
+        return FORWARD
 
     def winning_strategy(self, player, enemy, primary, secondary):
         # Check if any skill is available and use it wisely
