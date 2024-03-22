@@ -1,4 +1,3 @@
-# Testing PR request#3
 # bot code goes here
 from Game.Skills import *
 from Game.projectiles import *
@@ -10,8 +9,8 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 # SECONDARY CAN BE : Hadoken, Grenade, Boomerang, Bear Trap
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
-PRIMARY_SKILL = DashAttackSkill
-SECONDARY_SKILL = Grenade
+PRIMARY_SKILL = Meditate
+SECONDARY_SKILL = Hadoken
 
 # constants, for easier move return
 # movements
@@ -50,28 +49,26 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
-        for i in enemy_projectiles:
-            proj_dist = abs(get_pos(player)[0] - get_proj_pos(i)[0])
-            if proj_dist == 1:
-                if get_projectile_type(i) is not Grenade:
-                    return BLOCK
-
-        if get_last_move(enemy) == LIGHT or get_last_move(enemy) == HEAVY:
-            if distance == 1:
-                if get_last_move(player) is not BLOCK:
-                    return BLOCK
-        elif get_stun_duration(enemy) and distance == 1:
-            return LIGHT
-
-        #cum nd go
-        if (distance <= 2) and (not get_primary_cooldown(player)):
+        if not primary_on_cooldown(player) and get_hp(player) <= 80:
             return PRIMARY
-        if (distance < 6) and (not get_secondary_cooldown(player)):
-            if get_last_move(enemy) == FORWARD:
-                return SECONDARY
 
-        while distance < 6:
-            return BACK
+        for i in enemy_projectiles:
+            if abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+                return BLOCK
 
-        return FORWARD
+        if secondary_on_cooldown(enemy):
+            return SECONDARY
+
+        player_x, player_y = get_pos(player)
+        enemy_x, enemy_y = get_pos(enemy)
+        if player_y == enemy_y and abs(player_x - enemy_x) == 1:
+            if get_past_move(player, 1) == LIGHT:
+                if get_past_move(player, 2) == LIGHT:
+                    return HEAVY
+                else:
+                    return LIGHT
+            else:
+                return LIGHT
+
+        return BACK
 
