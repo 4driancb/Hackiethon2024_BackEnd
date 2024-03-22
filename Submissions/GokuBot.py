@@ -55,7 +55,7 @@ class Script:
             if get_projectile_type(i) == "hadoken":
                 return JUMP_FORWARD
             elif get_projectile_type(i) == "grenade" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) < 3:
-                return BACK
+                return FORWARD
             elif get_projectile_type(i) == "boomerang" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                 return BLOCK
             elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
@@ -63,7 +63,7 @@ class Script:
 
         if not primary_on_cooldown(player):
             return PRIMARY
-        if not secondary_on_cooldown(player):
+        if not secondary_on_cooldown(player) and get_last_move(player)[1] != (0,1):
             return SECONDARY
 
         if distance <= 1:
