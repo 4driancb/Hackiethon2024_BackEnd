@@ -51,6 +51,17 @@ class Script:
         enemy_pos = get_pos(enemy)
         distance = abs(player_pos[0] - enemy_pos[0])
 
+        for i in enemy_projectiles:
+            if get_projectile_type(i) == "hadoken":
+                return JUMP_FORWARD
+            elif get_projectile_type(i) == "grenade" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) < 3:
+                return BACK
+            elif get_projectile_type(i) == "boomerang" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+                return BLOCK
+            elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
+                return JUMP_BACKWARD
+            
+
         if player_pos[0] > enemy_pos[0]:
             return FORWARD
 
