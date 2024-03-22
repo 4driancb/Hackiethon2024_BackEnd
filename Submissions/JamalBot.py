@@ -10,7 +10,7 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
 PRIMARY_SKILL = TeleportSkill
-SECONDARY_SKILL = Hadoken
+SECONDARY_SKILL = Grenade
 
 # constants, for easier move return
 # movements
@@ -49,12 +49,19 @@ class Script:
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
         distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
+        if not secondary_on_cooldown(player) and distance > 1:
+            return SECONDARY
+        elif not primary_on_cooldown(player) and distance < 3:
+            return PRIMARY
+
+        self.block_heavy_combo(player, enemy)
+
         if distance == 1:
             return LIGHT
 
         return FORWARD
     
-    def block_heavy_combo(player, enemy)
+    def block_heavy_combo(self, player, enemy):
         player_x, player_y = get_pos(player)
         enemy_x, enemy_y = get_pos(enemy)
 
@@ -67,4 +74,39 @@ class Script:
             else:
                 return NOMOVE
         return NOMOVE
+
+    def winning_strategy(self, player, enemy, primary, secondary):
+        # Check if any skill is available and use it wisely
+        if not primary_on_cooldown(player) and abs(get_pos(player)[0] - get_pos(enemy)[0]) <= prim_range(player):
+            return primary
+        elif not secondary_on_cooldown(player) and abs(get_pos(player)[0] - get_pos(enemy)[0]) <= seco_range(player):
+            return secondary
+        elif not heavy_on_cooldown(player) and abs(get_pos(player)[0] - get_pos(enemy)[0]) <= 1:
+            return HEAVY
+
+        # Defensive strategy if low on health or enemy is too close
+        if get_hp(player) < 20 or abs(get_pos(player)[0] - get_pos(enemy)[0]) < 2:
+            # Block if enemy is close and likely to attack
+            if abs(get_pos(player)[0] - get_pos(enemy)[0]) == 1:
+                return BLOCK
+            # Move away from the enemy if possible
+            elif get_pos(player)[0] < get_pos(enemy)[0]:
+                return BACK
+            else:
+                return FORWARD
+
+        # Offensive strategy if player has more health
+        if get_hp(player) > get_hp(enemy):
+            # Close in on the enemy if not in attack range
+            if abs(get_pos(player)[0] - get_pos(enemy)[0]) > 1:
+                if get_pos(player)[0] < get_pos(enemy)[0]:
+                    return FORWARD
+                else:
+                    return BACK
+            # Use light attack if close and other attacks are on cooldown
+            else:
+                return LIGHT
+
+        # Default to light attack if nothing else is applicable
+        return LIGHT
 
