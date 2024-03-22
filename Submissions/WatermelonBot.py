@@ -82,7 +82,7 @@ class Script:
         if (distance <= 2) and (not get_primary_cooldown(player)):
             return PRIMARY
         if (distance <= 4) and (not get_secondary_cooldown(player)):
-            if get_last_move(enemy) == FORWARD:
+            if get_last_move(enemy) == FORWARD :
                 return SECONDARY
         if (distance <= 4) and (not get_secondary_cooldown(player)):
             return SECONDARY
