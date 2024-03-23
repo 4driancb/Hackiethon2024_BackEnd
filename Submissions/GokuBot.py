@@ -47,8 +47,13 @@ class Script:
 
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
+        player_pos = get_pos(player)
+        enemy_pos = get_pos(enemy)
+
         distance_x = abs(get_pos(player)[0] - get_pos(enemy)[0])
         distance_y = abs(get_pos(player)[1] - get_pos(enemy)[1])
+        distance = abs(player_pos[0] - enemy_pos[0])
+
         if get_primary_skill(enemy) == "onepunch" and not primary_on_cooldown(enemy):
             if distance_x == 1:
                 return JUMP_BACKWARD
@@ -64,12 +69,21 @@ class Script:
 
         if not primary_on_cooldown(player):
             return PRIMARY
+        
+        if get_stun_duration(enemy) > 0 and distance <= 1:
+            return LIGHT
+        
+        if distance <= 1:
+            if not heavy_on_cooldown(player):
+                return HEAVY
+            return LIGHT
+
         if get_last_move(player) is not None:
-            if not secondary_on_cooldown(player) and get_last_move(player)[1][1] != 1: #player not jumping
+            if not secondary_on_cooldown(player) and not get_last_move(player) == "JUMP": #player not jumping
                 if distance_x != 1:
                     return SECONDARY
                 return LIGHT
-
+            
         if distance_x <= 1 or distance_y <= 1:
             # if not heavy_on_cooldown(player):
             #     return HEAVY
