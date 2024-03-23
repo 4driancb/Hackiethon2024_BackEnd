@@ -77,9 +77,7 @@ class Script:
                 # Jump back when bear-trap is placed
                 elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                     return JUMP_BACKWARD
-                # Move back when enemy uses uppercut
-                elif get_projectile_type(i) == "uppercut" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
-                    return BACK
+
 
             # Spam grenades off cd
             if not secondary_on_cooldown(player):
@@ -105,6 +103,8 @@ class Script:
                     if distance_x != 1:
                         return SECONDARY
                     return LIGHT
+                if get_last_move(enemy)[0] == "uppercut" and distance < 2:
+                    return BLOCK
 
             # Move forward if distance is too far...
             if distance > 2:
