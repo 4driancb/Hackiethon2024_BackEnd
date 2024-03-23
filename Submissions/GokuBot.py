@@ -67,7 +67,7 @@ class Script:
             elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                 return JUMP_BACKWARD
 
-        if not primary_on_cooldown(player):
+        if not primary_on_cooldown(player) and distance_x >= 2:
             return PRIMARY
         
         if get_stun_duration(enemy) > 0 and distance <= 1:
@@ -84,10 +84,11 @@ class Script:
                     return SECONDARY
                 return LIGHT
             
-        if distance_x <= 1 or distance_y <= 1:
-            # if not heavy_on_cooldown(player):
-            #     return HEAVY
-            return LIGHT
-
+        # if distance_x <= 1 or distance_y <= 1:
+        #     # if not heavy_on_cooldown(player):
+        #     #     return HEAVY
+        #     return LIGHT
+        if distance > 2:
+            return FORWARD
         return BACK
 
