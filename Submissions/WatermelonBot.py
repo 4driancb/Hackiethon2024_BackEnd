@@ -59,9 +59,9 @@ class Script:
                     return PRIMARY
                 else:
                     return BACK
-            elif (get_projectile_type(i) == "boomerang") and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 2  :
+            elif (get_projectile_type(i) == "boomerang") and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 2:
                 print(abs(get_pos(player)[0] - get_proj_pos(i)[0]))
-                return JUMP
+                return JUMP_BACKWARD
             elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                 return JUMP_BACKWARD
 

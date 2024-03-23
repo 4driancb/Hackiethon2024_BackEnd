@@ -50,7 +50,7 @@ class Script:
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
 
-        if get_secondary_skill(enemy) == "hadoken":
+        if get_secondary_skill(enemy) == "hadoken" or get_secondary_skill(enemy) == "boomerang":
             player_pos = get_pos(player)
             enemy_pos = get_pos(enemy)
 
@@ -94,6 +94,9 @@ class Script:
                     if distance_x != 1:
                         return SECONDARY
                     return LIGHT
+
+            if distance > 2:
+                return FORWARD
 
             return BACK
         else:
