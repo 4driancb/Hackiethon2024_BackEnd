@@ -54,8 +54,8 @@ class Script:
         distance_y = abs(get_pos(player)[1] - get_pos(enemy)[1])
         distance = abs(player_pos[0] - enemy_pos[0])
 
-        if get_primary_skill(enemy) == "onepunch" and not primary_on_cooldown(enemy):
-            if distance_x == 1:
+        if get_last_move(enemy) is not None:
+            if get_last_move(enemy)[0] == "onepunch":
                 return JUMP_BACKWARD
         for i in enemy_projectiles:
             if get_projectile_type(i) == "hadoken":
@@ -67,7 +67,14 @@ class Script:
             elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                 return JUMP_BACKWARD
 
-        if not primary_on_cooldown(player) and distance_x >= 2:
+        # if get_last_move(player) is not None:
+        #     if get_last_move(player)[0] == 'grenade':
+        #         return SECONDARY
+        #
+        if not secondary_on_cooldown(player):
+            return SECONDARY
+
+        if not primary_on_cooldown(player) and distance_x <= 2:
             return PRIMARY
         
         if get_stun_duration(enemy) > 0 and distance <= 1:
@@ -79,16 +86,10 @@ class Script:
             return LIGHT
 
         if get_last_move(player) is not None:
-            if not secondary_on_cooldown(player) and not get_last_move(player) == "JUMP": #player not jumping
+            if not secondary_on_cooldown(player) and not get_last_move(player) == JUMP: #player not jumping
                 if distance_x != 1:
                     return SECONDARY
                 return LIGHT
-            
-        # if distance_x <= 1 or distance_y <= 1:
-        #     # if not heavy_on_cooldown(player):
-        #     #     return HEAVY
-        #     return LIGHT
-        if distance > 2:
-            return FORWARD
+
         return BACK
 
