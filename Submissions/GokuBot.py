@@ -41,7 +41,6 @@ class Script:
     def __init__(self):
         self.primary = PRIMARY_SKILL
         self.secondary = SECONDARY_SKILL
-        self.list_char = [];
 
     # DO NOT TOUCH
     def init_player_skills(self):
@@ -106,7 +105,7 @@ class Script:
                     return BLOCK
 
             # Move forward if distance is too far...
-            if distance > 2:
+            if distance > 2 and get_secondary_skill(enemy) == "hadoken":
                 return FORWARD
 
             # ...Otherwise, move back
