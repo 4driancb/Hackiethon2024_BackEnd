@@ -41,6 +41,7 @@ class Script:
     def __init__(self):
         self.primary = PRIMARY_SKILL
         self.secondary = SECONDARY_SKILL
+        self.list_char = [];
         
     # DO NOT TOUCH
     def init_player_skills(self):
@@ -48,9 +49,9 @@ class Script:
     
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
-        list_char = [];
-        list_char.append(random.randint(1,2))
-        if list_char[0] == 1:
+        self.list_char.append(random.randint(1,2))
+        print(self.list_char[0])
+        if self.list_char[0] == 1:
             player_pos = get_pos(player)
             enemy_pos = get_pos(enemy)
 
@@ -96,7 +97,7 @@ class Script:
                     return LIGHT
 
             return BACK
-        elif list_char[0] == 2:
+        elif self.list_char[0] == 2:
             distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
 
             # projectile
