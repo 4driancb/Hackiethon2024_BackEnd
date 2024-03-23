@@ -15,8 +15,8 @@ from Game.PlayerConfigs import Player_Controller
 
 # Manually choose bot files to test
 SUBMISSIONPATH = "Submissions"
-PATH1 = "Bot2"
-PATH2 = "WatermelonBot"
+PATH1 = "Bot1"
+PATH2 = "Bot2"
 
 # Get scripts from bot files and return as script objects
 def getPlayerFiles(path1, path2, subpath):
@@ -257,7 +257,23 @@ def performActions(player1, player2, act1, act2, stun1, stun2, projectiles):
         if proj_obj:
             projectiles.append(proj_obj)
         resetBlock(player2)
-
+    dashed_1 = dashed_2 = False
+    # move players if the attack caused them to move - dash attack
+    if isinstance(act1, tuple) and act1[0] == "dash_attack" and (knock1 or stun1):
+        #dash attack successful
+        dash_range = player1.primary_range()
+        player1._xCoord += player1._direction * dash_range
+        dashed_1 = True
+    
+    if isinstance(act2, tuple) and act2[0] == "dash_attack" and (knock2 or stun2):
+        #dash attack successful
+        dash_range = player2.primary_range()
+        player2._xCoord += player2._direction * dash_range
+        dashed_2 = True
+    if dashed_1 and dashed_2:
+        knock1 = 0
+        knock2 = 0
+        
     # Correct positioning again just in case
     correctPos(player1)
     correctPos(player2)
