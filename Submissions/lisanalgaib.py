@@ -6,7 +6,6 @@ from Game.playerActions import defense_actions, attack_actions, projectile_actio
 from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PARRYSTUN
 import random
 
-
 # PRIMARY CAN BE: Teleport, Super Saiyan, Meditate, Dash Attack, Uppercut, One Punch
 # SECONDARY CAN BE : Hadoken, Grenade, Boomerang, Bear Trap
 
@@ -14,12 +13,12 @@ import random
 PRIMARY_SKILL = DashAttackSkill
 SECONDARY_SKILL = Grenade
 
-#constants, for easier move return
-#movements
-JUMP = ("move", (0,1))
-FORWARD = ("move", (1,0))
-BACK = ("move", (-1,0))
-JUMP_FORWARD = ("move", (1,1))
+# constants, for easier move return
+# movements
+JUMP = ("move", (0, 1))
+FORWARD = ("move", (1, 0))
+BACK = ("move", (-1, 0))
+JUMP_FORWARD = ("move", (1, 1))
 JUMP_BACKWARD = ("move", (-1, 1))
 
 # attacks and block
@@ -36,17 +35,18 @@ NOMOVE = "NoMove"
 moves = SECONDARY,
 moves_iter = iter(moves)
 
+
 # TODO FOR PARTICIPANT: WRITE YOUR WINNING BOT
 class Script:
     def __init__(self):
         self.primary = PRIMARY_SKILL
         self.secondary = SECONDARY_SKILL
         self.list_char = [];
-        
+
     # DO NOT TOUCH
     def init_player_skills(self):
         return self.primary, self.secondary
-    
+
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
 
@@ -55,7 +55,6 @@ class Script:
             enemy_pos = get_pos(enemy)
 
             distance_x = abs(get_pos(player)[0] - get_pos(enemy)[0])
-            distance_y = abs(get_pos(player)[1] - get_pos(enemy)[1])
             distance = abs(player_pos[0] - enemy_pos[0])
 
             if get_last_move(enemy) is not None:
@@ -71,10 +70,6 @@ class Script:
                 elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                     return JUMP_BACKWARD
 
-            # if get_last_move(player) is not None:
-            #     if get_last_move(player)[0] == 'grenade':
-            #         return SECONDARY
-            #
             if not secondary_on_cooldown(player):
                 return SECONDARY
 
@@ -95,12 +90,9 @@ class Script:
                         return SECONDARY
                     return LIGHT
 
-            if distance > 2:
-                return FORWARD
-
             return BACK
         else:
-            #watermelon
+            # watermelon
             distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
             # projectile
             for i in enemy_projectiles:
@@ -141,4 +133,3 @@ class Script:
                 return FORWARD
 
             return BACK
-
