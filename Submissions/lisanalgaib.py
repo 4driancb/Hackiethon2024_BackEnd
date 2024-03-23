@@ -78,7 +78,6 @@ class Script:
                 elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                     return JUMP_BACKWARD
 
-
             # Spam grenades off cd
             if not secondary_on_cooldown(player):
                 return SECONDARY
