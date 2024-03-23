@@ -54,8 +54,11 @@ class Script:
         for i in enemy_projectiles:
             if get_projectile_type(i) == "hadoken":
                 return JUMP_FORWARD
-            elif get_projectile_type(i) == "grenade" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) < 3:
-                return FORWARD
+            elif get_projectile_type(i) == "grenade" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) < 4:
+                if not get_primary_cooldown(player):
+                    return PRIMARY
+                else:
+                    return BACK
             elif get_projectile_type(i) == "boomerang" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
                 return BLOCK
             elif get_projectile_type(i) == "beartrap" and abs(get_pos(player)[0] - get_proj_pos(i)[0]) == 1:
@@ -67,15 +70,20 @@ class Script:
                 return BLOCK
             if get_last_move(enemy)[0] == "onepunch" and distance < 2:
                 return JUMP_BACKWARD
+            if get_last_move(enemy)[0] == "uppercut" and distance < 2:
+                return BLOCK
+
+        if distance <= 1:
+            if not heavy_on_cooldown(player):
+                return HEAVY
+            return LIGHT
+
+        if (not primary_on_cooldown(player)) and (distance <= 2):
+            return PRIMARY
 
         if distance < 7:
             if not secondary_on_cooldown(player):
                 return SECONDARY
-        if (not primary_on_cooldown(player)) and (distance <= 2):
-            return PRIMARY
-
-        if distance <= 1:
-            return LIGHT
 
         if distance > 2:
             return FORWARD
