@@ -10,7 +10,7 @@ from gameSettings import HP, LEFTBORDER, RIGHTBORDER, LEFTSTART, RIGHTSTART, PAR
 # SECONDARY CAN BE : Hadoken, Grenade, Boomerang, Bear Trap
 
 # TODO FOR PARTICIPANT: Set primary and secondary skill here
-PRIMARY_SKILL = OnePunchSkill
+PRIMARY_SKILL = DashAttackSkill
 SECONDARY_SKILL = Boomerang
 
 # constants, for easier move return
@@ -77,7 +77,7 @@ class Script:
         if distance <= 1:
             return LIGHT
 
-        if distance > 5:
+        if distance > 2:
             return FORWARD
 
         return BACK
