@@ -47,9 +47,10 @@ class Script:
 
     # MAIN FUNCTION that returns a single move to the game manager
     def get_move(self, player, enemy, player_projectiles, enemy_projectiles):
-        distance = abs(get_pos(player)[0] - get_pos(enemy)[0])
-        if get_primary_skill(enemy) == "onepunch":
-            if distance <= 2:
+        distance_x = abs(get_pos(player)[0] - get_pos(enemy)[0])
+        distance_y = abs(get_pos(player)[1] - get_pos(enemy)[1])
+        if get_primary_skill(enemy) == "onepunch" and not primary_on_cooldown(enemy):
+            if distance_x == 1:
                 return JUMP_BACKWARD
         for i in enemy_projectiles:
             if get_projectile_type(i) == "hadoken":
@@ -67,9 +68,9 @@ class Script:
             if not secondary_on_cooldown(player) and get_last_move(player)[1][1] != 1:
                 return SECONDARY
 
-        if distance <= 1:
-            if not heavy_on_cooldown(player):
-                return HEAVY
+        if distance_x <= 1 or distance_y <= 1:
+            # if not heavy_on_cooldown(player):
+            #     return HEAVY
             return LIGHT
 
         return BACK
